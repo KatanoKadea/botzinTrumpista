@@ -17,8 +17,8 @@ Obs.:
 ## Para rodar
 A variávels 'minimo_envios' configura quantas vezes vão ser enviados, aumente para mandar mais vezes
 
-'''
+```
 pip install -r requeriments.txt 
 playwright install
 python3 main.py
-'''
+```
