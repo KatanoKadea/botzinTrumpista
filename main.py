@@ -4,6 +4,9 @@ import os
 from itertools import cycle
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+#altere esse valor para configurar um mínimo de vezes que vai enviar
+minimo_envios = 5
+
 # Leitura dos arquivos
 with open("nomes.txt") as f:
     nomes = [linha.strip() for linha in f.readlines()]
@@ -13,7 +16,7 @@ with open("orgs.txt") as f:
     orgs = [linha.strip() for linha in f.readlines()]
 files = os.listdir("images")
 
-max_len = max(len(nomes), len(emails), len(orgs),len(files))
+max_len = max(5, len(nomes), len(emails), len(orgs),len(files))
 def repetir_para_tamanho(lista, tamanho):
     return list(item for item, _ in zip(cycle(lista), range(tamanho)))
 
