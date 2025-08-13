@@ -2,10 +2,15 @@ from playwright.sync_api import sync_playwright
 import time
 import os
 from itertools import cycle
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 
-#altere esse valor para configurar um mínimo de vezes que vai enviar
-minimo_envios = 5
+#Altere esse valor para configurar um mínimo de vezes que vai enviar
+#Cada imagem, nome, organização ou email vai ser enviado pelo menos uma vez
+minimo_envios = 1000
+
+# Altere o número abaixo para mudar a quantidade de abas feitas em paralelo(ao mesmo tempo)
+# Se o seu computador não for muito bom, recomendo não alterar esse número
+workers = 5
 
 # Leitura dos arquivos
 with open("nomes.txt") as f:
@@ -16,7 +21,7 @@ with open("orgs.txt") as f:
     orgs = [linha.strip() for linha in f.readlines()]
 files = os.listdir("images")
 
-max_len = max(5, len(nomes), len(emails), len(orgs),len(files))
+max_len = max(minimo_envios, len(nomes), len(emails), len(orgs),len(files))
 def repetir_para_tamanho(lista, tamanho):
     return list(item for item, _ in zip(cycle(lista), range(tamanho)))
 
@@ -80,9 +85,9 @@ def sent_forms(org, nome, email, file):
         time.sleep(3)
         page.click('button:has-text("Submit")')
 
-        time.sleep(3)
+        time.sleep(1)
         browser.close()
 
 
-with ThreadPoolExecutor(max_workers=5) as executor:  # Pode ajustar o número de workers
+with ThreadPoolExecutor(max_workers=workers) as executor:  # Pode ajustar o número de workers
     tarefas = [executor.submit(sent_forms, org, nome, email, file ) for org,nome,email,file in zip(orgs,nomes,emails,files)]
